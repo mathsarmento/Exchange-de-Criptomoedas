@@ -166,14 +166,80 @@ void sacar(float* saldo, char* senha) {
         if (valor > 0 && valor <= *saldo) {
             *saldo -= valor;
             printf("Saque realizado com sucesso!\n");
-            printf("Seu novo saldo é: R$ %.2f\n\n", *saldo);
+            printf("Seu novo saldo: R$ %.2f\n\n", *saldo);
         } else if (valor > *saldo) {
             printf("Saldo insuficiente para saque!\n\n");
         } else {
-            printf("Valor inválido para saque!\n\n");
+            printf("Valor invalido para saque!\n\n");
         }
     } else {
         printf("Senha incorreta!\n\n");
+    }
+}
+
+void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha, float bitcoinCotacao, float ethereumCotacao, float rippleCotacao) {
+    int opcao;
+    float valorcompra;
+    float taxa; // Variável para armazenar a taxa
+    char senhadigitada[100];
+
+    printf("Selecione a criptomoeda que deseja comprar:\n");
+    printf("1. Bitcoin (Taxa: 2%%)\n");
+    printf("2. Ethereum (Taxa: 1%%)\n");
+    printf("3. Ripple (Taxa: 1%%)\n");
+    printf("4. Sair\n");
+    printf("Opcao: ");
+    scanf("%d", &opcao);
+
+    if (opcao == 4) {
+        printf("Saindo da compra...\n");
+        return;
+    }
+
+    printf("Digite o valor em reais que deseja comprar: ");
+    scanf("%f", &valorcompra);
+
+    printf("Digite a senha para confirmar a compra: ");
+    scanf("%s", senhadigitada);
+    
+    if (strcmp(senha, senhadigitada) != 0) {
+        printf("Senha incorreta! A compra foi cancelada.\n\n");
+        return;
+    }
+
+    if (valorcompra < *saldo)
+    {
+        printf("Saldo insuficiente para compra!\n\n");
+        return;
+    }
+    
+
+    if (valorcompra > 0) {
+        switch (opcao) {
+            case 1: // Bitcoin
+                taxa = valorcompra * 0.02;
+                *bitcoin += (valorcompra - taxa) / bitcoinCotacao;
+                printf("Você comprou R$ %.2f em Bitcoin (%.8f BTC).\n", valorcompra - taxa, (valorcompra - taxa) / bitcoinCotacao);
+                printf("Taxa cobrada: R$ %.2f\n", taxa);
+                break;
+            case 2: // Ethereum
+                taxa = valorcompra * 0.01;
+                *ethereum += (valorcompra - taxa) / ethereumCotacao;
+                printf("Você comprou R$ %.2f em Ethereum (%.8f ETH).\n", valorcompra - taxa, (valorcompra - taxa) / ethereumCotacao);
+                printf("Taxa cobrada: R$ %.2f\n", taxa);
+                break;
+            case 3: // Ripple
+                taxa = valorcompra * 0.01; // 1% de taxa
+                *ripple += (valorcompra - taxa) / rippleCotacao;
+                printf("Você comprou R$ %.2f em Ripple (%.8f XRP).\n", valorcompra - taxa, (valorcompra - taxa) / rippleCotacao);
+                printf("Taxa cobrada: R$ %.2f\n", taxa);
+                break;
+            default:
+                printf("Opcao invalida! Selecione 1, 2, 3 ou 4.\n");
+                break;
+        }
+    } else {
+        printf("Valor invalido para compra!\n");
     }
 }
 
@@ -215,7 +281,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
                 break;
 
             case 5:
-                // comprarcriptomoedas(&bitcoin, &ripple, &ethereum, senha, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
+                comprarcriptomoedas(&saldo, &bitcoin, &ripple, &ethereum, senha, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
                 break;
 
             case 6:
