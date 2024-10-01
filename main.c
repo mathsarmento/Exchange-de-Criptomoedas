@@ -86,6 +86,29 @@ void criarRegistro(char* cpf) {
     fclose(file);
 }
 
+int lenRegistros(char* cpf) {
+    char arq[50];
+    sprintf(arq, "registros/%s.txt", cpf);
+    
+    FILE *file = fopen(arq, "r");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo registro.txt");
+        return 0;
+    }
+
+    int i = 0;
+    char c;
+
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') {
+            i++;
+        }
+    }
+
+    fclose(file);
+    return i;
+}
+
 void salvarRegistro(char* cpf, char* registro) {
     char arq[50];
     sprintf(arq, "registros/%s.txt", cpf);
@@ -492,11 +515,13 @@ void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* eth
     }
 }
 
-void vendercriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha) {
+void vendercriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha, float bitcoinCotacao, float ethereumCotacao, float rippleCotacao, char* cpf) {
     int opcao;
     float valorVenda;
     float taxa;
+    float valorVendaReal;
     char senhadigitada[100];
+    char registro[100];
 
     printf("Selecione a criptomoeda que deseja vender:\n");
     printf("1. Bitcoin (Taxa: 3%%)\n");
@@ -526,36 +551,48 @@ void vendercriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethe
         switch (opcao) {
             case 1: // Bitcoin
                 if (*bitcoin >= valorVenda) {
-                    taxa = valorVenda * 0.03;
+                    valorVendaReal = valorVenda * bitcoinCotacao;
+                    taxa = valorVendaReal * 0.03;
+                    valorVendaReal -= taxa;
                     *bitcoin -= valorVenda;
-                    printf("Você vendeu R$ %.2f em Bitcoin.\n", valorVenda);
+                    printf("Você vendeu %.8f BTC.\n", valorVenda);
                     printf("Taxa cobrada: R$ %.2f\n", taxa);
-                    printf("Você recebera R$ %.2f após a taxa.\n", valorVenda - taxa);
-                    *saldo += valorVenda - taxa;
+                    printf("Você recebera R$ %.2f após a taxa.\n", valorVendaReal);
+                    *saldo += valorVendaReal;
+                    sprintf(registro, "+ R$%.2f | - %.8f BTC | Cot: R$%.2f | Saldo: R$%.2f",valorVendaReal, valorVenda, bitcoinCotacao, *saldo);
+                    salvarRegistro(cpf, registro);
                 } else {
                     printf("Saldo insuficiente para venda!\n");
                 }
                 break;
             case 2: // Ethereum
                 if (*ethereum >= valorVenda) {
-                    taxa = valorVenda * 0.02; 
+                    valorVendaReal = valorVenda * ethereumCotacao;
+                    taxa = valorVendaReal * 0.02; 
+                    valorVendaReal -= taxa;
                     *ethereum -= valorVenda;
-                    printf("Você vendeu R$ %.2f em Ethereum.\n", valorVenda);
+                    printf("Você vendeu %.5f ETH.\n", valorVenda);
                     printf("Taxa cobrada: R$ %.2f\n", taxa);
-                    printf("Você recebera R$ %.2f após a taxa.\n", valorVenda - taxa);
-                    *saldo += valorVenda - taxa;
+                    printf("Você recebera R$ %.2f após a taxa.\n", valorVendaReal);
+                    *saldo += valorVendaReal;
+                    sprintf(registro, "+ R$%.2f | - %.5f ETH | Cot: R$%.2f | Saldo: R$%.2f",valorVendaReal, valorVenda, ethereumCotacao, *saldo);
+                    salvarRegistro(cpf, registro);
                 } else {
                     printf("Saldo insuficiente para venda!\n");
                 }
                 break;
             case 3: // Ripple
                 if (*ripple >= valorVenda) {
-                    taxa = valorVenda * 0.01;
+                    valorVendaReal = valorVenda * rippleCotacao;
+                    taxa = valorVendaReal * 0.01;
+                    valorVendaReal -= taxa;
                     *ripple -= valorVenda;
-                    printf("Você vendeu R$ %.2f em Ripple.\n", valorVenda);
+                    printf("Você vendeu R$ %.2f XRP.\n", valorVenda);
                     printf("Taxa cobrada: R$ %.2f\n", taxa);
-                    printf("Você recebera R$ %.2f após a taxa.\n", valorVenda - taxa);
-                    *saldo += valorVenda - taxa;
+                    printf("Você recebera R$ %.2f após a taxa.\n", valorVendaReal);
+                    *saldo += valorVendaReal;
+                    sprintf(registro, "+ R$%.2f | - %.2f XRP | Cot: R$%.2f | Saldo: R$%.2f",valorVendaReal, valorVenda, rippleCotacao, *saldo);
+                    salvarRegistro(cpf, registro);
                 } else {
                     printf("Saldo insuficiente para venda!\n");
                 }
@@ -591,8 +628,16 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float *saldo, float *bitc
     float bitcoinCotacao = 200000.0;
     float ethereumCotacao = 12000.0;
     float rippleCotacao = 5.50;
+    int numeroRegistros;
 
     while (opcao != 8) {
+        numeroRegistros = lenRegistros(cpf);
+        if (numeroRegistros >= 100) {
+            printf("Numero maximo de registros atingido!\n\n");
+            loading();
+            return 0;
+        }
+        
         printf("Selecione a opcao desejada:\n");
         printf("1. Ver saldo\n");
         printf("2. Consultar extrato\n");
@@ -632,7 +677,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float *saldo, float *bitc
             case 6:
                 exibirCotacao(bitcoinCotacao, ethereumCotacao, rippleCotacao);
                 loading();
-                vendercriptomoedas(saldo, bitcoin, ripple, ethereum, senha);
+                vendercriptomoedas(saldo, bitcoin, ripple, ethereum, senha, bitcoinCotacao, ethereumCotacao, rippleCotacao, cpf);
                 salvarSaldo(cpf, *saldo, *bitcoin, *ethereum, *ripple);
                 break;
 
