@@ -151,6 +151,32 @@ void depositar(float* saldo) {
     }
 }
 
+void sacar(float* saldo, char* senha) {
+    float valor;
+    char senhadigitada[100];
+
+    printf("\nInforme o valor para saque: R$ ");
+    scanf("%f", &valor);
+
+    printf("Digite a senha: ");
+    scanf("%s", senhadigitada);
+    getchar(); // Clear the input buffer
+
+    if (strcmp(senha, senhadigitada) == 0) { 
+        if (valor > 0 && valor <= *saldo) {
+            *saldo -= valor;
+            printf("Saque realizado com sucesso!\n");
+            printf("Seu novo saldo é: R$ %.2f\n\n", *saldo);
+        } else if (valor > *saldo) {
+            printf("Saldo insuficiente para saque!\n\n");
+        } else {
+            printf("Valor inválido para saque!\n\n");
+        }
+    } else {
+        printf("Senha incorreta!\n\n");
+    }
+}
+
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao = 0;
     float saldo = 0.0;
@@ -185,7 +211,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
                 break;
 
             case 4:
-                // sacar(&saldo, senha);
+                sacar(&saldo, senha);
                 break;
 
             case 5:
