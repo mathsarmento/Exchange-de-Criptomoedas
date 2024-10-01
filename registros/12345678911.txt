@@ -1,0 +1,5 @@
++ R$15000.00 depositado saldo: R$15000.00
+- R$2000.00 sacado saldo: R$13000.00
+- R$4900.00 | + 0.02450000 BTC | taxa: 200000.00 | Saldo: R$13000.00.
+- R$4950.00 | + 0.41250000 ETH | taxa: 12000.00 | Saldo: R$13000.00.
+- R$50.00 sacado saldo: R$12950.00
