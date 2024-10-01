@@ -177,11 +177,20 @@ void sacar(float* saldo, char* senha) {
     }
 }
 
+void exibirCotacao(float bitcoinCotacao, float ethereumCotacao, float rippleCotacao) {
+    printf("Cotacao Atual:\n");
+    printf("1 Bitcoin: R$ %.2f\n", bitcoinCotacao);
+    printf("1 Ethereum: R$ %.2f\n", ethereumCotacao);
+    printf("1 Ripple: R$ %.2f\n\n", rippleCotacao);
+}
+
 void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha, float bitcoinCotacao, float ethereumCotacao, float rippleCotacao) {
     int opcao;
     float valorcompra;
-    float taxa; // Variável para armazenar a taxa
+    float taxa;
     char senhadigitada[100];
+
+    exibirCotacao(bitcoinCotacao, ethereumCotacao, rippleCotacao);
 
     printf("Selecione a criptomoeda que deseja comprar:\n");
     printf("1. Bitcoin (Taxa: 2%%)\n");
@@ -320,6 +329,23 @@ void vendercriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethe
     }
 }
 
+void atualizarCotacao(float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao) {
+    float variacao;
+
+    variacao = ((rand() % 100) / 100.0) * 0.1 - 0.05;
+    *bitcoinCotacao *= (1 + variacao);
+    
+    variacao = ((rand() % 100) / 100.0) * 0.1 - 0.05;
+    *ethereumCotacao *= (1 + variacao);
+    
+    variacao = ((rand() % 100) / 100.0) * 0.1 - 0.05;
+    *rippleCotacao *= (1 + variacao);
+
+    printf("Cotações atualizadas com sucesso!\n\n");
+    
+    exibirCotacao(*bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
+}
+    
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao = 0;
     float saldo = 0.0;
@@ -362,6 +388,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
                 break;
 
             case 6:
+                exibirCotacao(*bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
                 vendercriptomoedas(&saldo, &bitcoin, &ripple, &ethereum, senha);
                 break;
 
@@ -386,9 +413,9 @@ int main() {
     char cpfAuth[100];
     char senhaAuth[100];
     char nomeAuth[100];
-    float bitcoinCotacao = 0;
-    float ethereumCotacao = 0;
-    float rippleCotacao = 0;
+    float bitcoinCotacao = 200000.0;
+    float ethereumCotacao = 12000.0;
+    float rippleCotacao = 5.50;
 
     while (1)
     {
