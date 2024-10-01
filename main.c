@@ -243,6 +243,83 @@ void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* eth
     }
 }
 
+void vendercriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha) {
+    int opcao;
+    float valorVenda;
+    float taxa;
+    char senhadigitada[100];
+
+    printf("Selecione a criptomoeda que deseja vender:\n");
+    printf("1. Bitcoin (Taxa: 3%%)\n");
+    printf("2. Ethereum (Taxa: 2%%)\n");
+    printf("3. Ripple (Taxa: 1%%)\n");
+    printf("4. Sair\n");
+    printf("Opcao: ");
+    scanf("%d", &opcao);
+
+    if (opcao == 4) {
+        printf("Saindo da venda...\n");
+        return;
+    }
+
+    printf("Digite o valor em reais que deseja vender: ");
+    scanf("%f", &valorVenda);
+
+    printf("Digite a senha para confirmar a compra: ");
+    scanf("%s", senhadigitada);
+    
+    if (strcmp(senha, senhadigitada) != 0) {
+        printf("Senha incorreta! A compra foi cancelada.\n\n");
+        return;
+    }
+
+    if (valorVenda > 0) {
+        switch (opcao) {
+            case 1: // Bitcoin
+                if (*bitcoin >= valorVenda) {
+                    taxa = valorVenda * 0.03;
+                    *bitcoin -= valorVenda;
+                    printf("Você vendeu R$ %.2f em Bitcoin.\n", valorVenda);
+                    printf("Taxa cobrada: R$ %.2f\n", taxa);
+                    printf("Você receberá R$ %.2f após a taxa.\n", valorVenda - taxa);
+                    *saldo += valorVenda - taxa;
+                } else {
+                    printf("Saldo insuficiente para venda!\n");
+                }
+                break;
+            case 2: // Ethereum
+                if (*ethereum >= valorVenda) {
+                    taxa = valorVenda * 0.02; 
+                    *ethereum -= valorVenda;
+                    printf("Você vendeu R$ %.2f em Ethereum.\n", valorVenda);
+                    printf("Taxa cobrada: R$ %.2f\n", taxa);
+                    printf("Você receberá R$ %.2f após a taxa.\n", valorVenda - taxa);
+                    *saldo += valorVenda - taxa;
+                } else {
+                    printf("Saldo insuficiente para venda!\n");
+                }
+                break;
+            case 3: // Ripple
+                if (*ripple >= valorVenda) {
+                    taxa = valorVenda * 0.01;
+                    *ripple -= valorVenda;
+                    printf("Você vendeu R$ %.2f em Ripple.\n", valorVenda);
+                    printf("Taxa cobrada: R$ %.2f\n", taxa);
+                    printf("Você receberá R$ %.2f após a taxa.\n", valorVenda - taxa);
+                    *saldo += valorVenda - taxa;
+                } else {
+                    printf("Saldo insuficiente para venda!\n");
+                }
+                break;
+            default:
+                printf("Opção inválida! Selecione 1, 2, 3 ou 4.\n");
+                break;
+        }
+    } else {
+        printf("Valor inválido para venda!\n");
+    }
+}
+
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao = 0;
     float saldo = 0.0;
@@ -285,7 +362,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
                 break;
 
             case 6:
-                // vendercriptomoedas(bitcoinCotacao, ethereumCotacao, rippleCotacao, senha);
+                vendercriptomoedas(&saldo, &bitcoin, &ripple, &ethereum, senha);
                 break;
 
             case 7:
