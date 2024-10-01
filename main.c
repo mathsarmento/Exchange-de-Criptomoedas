@@ -68,7 +68,7 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha) {
     int autenticado = 0;
 
     printf("Autenticando...\n\n");
-    Sleep(2000);
+    // Sleep(2000);
     while (1) {
         if (feof(file)) {
             break;
@@ -91,11 +91,11 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha) {
         }
     }
     fclose(file);
-    Sleep(2000);
+    // Sleep(2000);
 
     if (autenticado) {
         printf("Login bem-sucedido!\n\n\n");
-        Sleep(2000);
+        // Sleep(2000);
         return 1;
     } else {
         char opcao[100];
@@ -145,20 +145,20 @@ void depositar(float* saldo) {
     if (valor > 0) {
         *saldo += valor;
         printf("Deposito realizado com sucesso!\n");
-        printf("Seu novo saldo é: R$ %.2f\n\n", *saldo);
+        printf("Seu novo saldo: R$ %.2f\n\n", *saldo);
     } else {
         printf("Valor invalido para deposito!\n\n");
     }
 }
 
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
-    int opcao;
+    int opcao = 0;
     float saldo = 0.0;
     float bitcoin = 0.0;
     float ethereum = 0.0;
     float ripple = 0.0;
 
-    do {
+    while (opcao != 8) {
         printf("Selecione a opcao desejada:\n");
         printf("1. Ver saldo\n");
         printf("2. Consultar extrato\n");
@@ -181,7 +181,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
                 break;
 
             case 3:
-                // depositar(&saldo);
+                depositar(&saldo);
                 break;
 
             case 4:
@@ -207,9 +207,9 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
             default:
                 printf("Opcao invalida! Por favor, selecione uma opcao valida.\n\n");
         }
-    } while (opcao != 8);
+    }
 
-    return 0;// Return 0 to indicate logout
+    return 0;
 }
 
 int main() {
@@ -246,7 +246,7 @@ int main() {
             printf("Saindo...\n");
             break;
         } else {
-            printf("Opção invalida! Tente novamente.\n");
+            printf("Opcao invalida! Tente novamente.\n");
         }
     }
     
