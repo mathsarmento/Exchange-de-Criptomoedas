@@ -138,6 +138,19 @@ void consultarsaldo(char* nome, char* cpf, float saldo, float bitcoin, float eth
     }
 }
 
+void depositar(float* saldo) {
+    float valor;
+    printf("\nInforme o valor para deposito: R$ ");
+    scanf("%f", &valor);
+    if (valor > 0) {
+        *saldo += valor;
+        printf("Deposito realizado com sucesso!\n");
+        printf("Seu novo saldo é: R$ %.2f\n\n", *saldo);
+    } else {
+        printf("Valor invalido para deposito!\n\n");
+    }
+}
+
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao;
     float saldo = 0.0;
