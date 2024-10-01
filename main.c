@@ -114,21 +114,65 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha) {
 
 }
 
-int menuInvestidor(char* nome, char* cpf, char* senha) {
+int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao;
+    float saldo = 0.0;
+    float bitcoin = 0.0;
+    float ethereum = 0.0;
+    float ripple = 0.0;
 
-    printf("Bem-vindo, %s!\n\n", nome);
-    printf("senha: %s\n\n\n", senha);
-    printf("Selecione a opcao desejada:\n");
-    printf("1. Ver saldo\n");
-    printf("2. Depositar\n");
-    printf("3. Sacar\n");
-    printf("4. Transferir\n");
-    printf("5. Sair\n");
-    printf("Opcao: ");
-    scanf("%d", &opcao);
+    do {
+        printf("Selecione a opcao desejada:\n");
+        printf("1. Ver saldo\n");
+        printf("2. Consultar extrato\n");
+        printf("3. Depositar\n");
+        printf("4. Sacar\n");
+        printf("5. Comprar criptomoedas\n");
+        printf("6. Vender criptomoedas\n");
+        printf("7. Atualizar cotacao\n");
+        printf("8. Sair\n");
+        printf("Opcao: ");
+        scanf("%d", &opcao);
 
-    return opcao;
+        switch (opcao) {
+            case 1:
+                // consultarsaldo(nome, cpf, saldo, bitcoin, ethereum, ripple, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
+                break;
+            
+            case 2:
+                //consultarextrato();
+                break;
+
+            case 3:
+                // depositar(&saldo);
+                break;
+
+            case 4:
+                // sacar(&saldo, senha);
+                break;
+
+            case 5:
+                // comprarcriptomoedas(&bitcoin, &ripple, &ethereum, senha, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
+                break;
+
+            case 6:
+                // vendercriptomoedas(bitcoinCotacao, ethereumCotacao, rippleCotacao, senha);
+                break;
+
+            case 7:
+                // atualizarCotacao(bitcoinCotacao, ethereumCotacao, rippleCotacao);
+                break;
+
+            case 8:
+                printf("Obrigado por utilizar o sistema, %s! Ate logo.\n\n", nome);
+                return 0;
+
+            default:
+                printf("Opcao invalida! Por favor, selecione uma opcao valida.\n\n");
+        }
+    } while (opcao != 8);
+
+    return 0;// Return 0 to indicate logout
 }
 
 int main() {
@@ -136,6 +180,9 @@ int main() {
     char cpfAuth[100];
     char senhaAuth[100];
     char nomeAuth[100];
+    float bitcoinCotacao = 0;
+    float ethereumCotacao = 0;
+    float rippleCotacao = 0;
 
     while (1)
     {
@@ -156,7 +203,7 @@ int main() {
             autenticado = autenticarInvestidor(nomeAuth, cpfAuth, senhaAuth);
 
             while (autenticado) {
-               autenticado = menuInvestidor(nomeAuth, cpfAuth, senhaAuth);
+               autenticado = menuInvestidor(nomeAuth, cpfAuth, senhaAuth, &bitcoinCotacao, &ethereumCotacao, &rippleCotacao);
             }
         } else if (opcao == 3) {
             printf("Saindo...\n");
