@@ -114,6 +114,30 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha) {
 
 }
 
+void consultarsaldo(char* nome, char* cpf, float saldo, float bitcoin, float ethereum, float ripple, float bitcoinCotacao, float ethereumCotacao, float rippleCotacao) {
+    printf("\nNome: %s\nCPF: %s\n", nome, cpf);
+    printf("\nSeu saldo atual em reais: R$ %.2f\n", saldo);
+
+     // Verifica se o saldo de cada criptomoeda é maior que zero antes de realizar a conversão
+    if (bitcoin > 0) {
+        printf("Seu saldo atual em Bitcoin: %.8f BTC (R$ %.2f)\n", bitcoin, bitcoin * bitcoinCotacao);
+    } else {
+        printf("Seu saldo atual em Bitcoin: 0 BTC (R$ 0.00)\n");
+    }
+
+    if (ethereum > 0) {
+        printf("Seu saldo atual em Ethereum: %.8f ETH (R$ %.2f)\n", ethereum, ethereum * ethereumCotacao);
+    } else {
+        printf("Seu saldo atual em Ethereum: 0 ETH (R$ 0.00)\n");
+    }
+
+    if (ripple > 0) {
+        printf("Seu saldo atual em Ripple: %.8f XRP (R$ %.2f)\n", ripple, ripple * rippleCotacao);
+    } else {
+        printf("Seu saldo atual em Ripple: 0 XRP (R$ 0.00)\n\n");
+    }
+}
+
 int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, float* ethereumCotacao, float* rippleCotacao ) {
     int opcao;
     float saldo = 0.0;
@@ -136,7 +160,7 @@ int menuInvestidor(char* nome, char* cpf, char* senha, float* bitcoinCotacao, fl
 
         switch (opcao) {
             case 1:
-                // consultarsaldo(nome, cpf, saldo, bitcoin, ethereum, ripple, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
+                consultarsaldo(nome, cpf, saldo, bitcoin, ethereum, ripple, *bitcoinCotacao, *ethereumCotacao, *rippleCotacao);
                 break;
             
             case 2:
