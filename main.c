@@ -4,11 +4,93 @@
 
 void loading() {
     printf("\n");
-    for (int i = 0; i <= 100; i++) {
-        Sleep(15);
+    for (int i = 0; i <= 120; i++) {
+        Sleep(12);
         printf(".");
     }
     printf("\n\n");
+}
+
+int lenRegistros(char* cpf) {
+    char arq[50];
+    sprintf(arq, "registros/%s.txt", cpf);
+    
+    FILE *file = fopen(arq, "r");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo registro.txt");
+        return 0;
+    }
+
+    int i = 0;
+    char c;
+
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') {
+            i++;
+        }
+    }
+
+    fclose(file);
+    return i;
+}
+
+int checkIsNumber(char* str){
+    for (int i = 0; i < strlen(str); i++) {
+        if (str[i] < '0' || str[i] > '9') {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int checkCpfExist(char* cpf){
+    char cpfCheck[20];
+    FILE *file = fopen("cpfs.txt", "r");
+    
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo cpfs.txt");
+        return 0;
+    }
+
+    int i = 0;
+    while (1) {
+        if (feof(file)) {
+            break;
+        }
+
+        fscanf(file, "%[^\n]", cpfCheck);
+        fgetc(file);
+
+        if (strcmp(cpf, cpfCheck) == 0) {
+            fclose(file);
+            return 1;
+        }
+        i++;
+    }
+    fclose(file);
+    return 0;
+}
+
+int totalCpf() {
+    FILE *file = fopen("cpfs.txt", "r");
+    
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo cpfs.txt");
+        return 0;
+    }
+
+    int i = 0;
+    char c;
+
+    // Loop para contar o número de linhas no arquivo
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') {
+            i++;
+        }
+    }
+
+    fclose(file);
+    return i;
 }
 
 void resgatarSaldo(char* cpf, float* saldo, float* bitcoin, float* ethereum, float* ripple) {
@@ -86,29 +168,6 @@ void criarRegistro(char* cpf) {
     fclose(file);
 }
 
-int lenRegistros(char* cpf) {
-    char arq[50];
-    sprintf(arq, "registros/%s.txt", cpf);
-    
-    FILE *file = fopen(arq, "r");
-    if (file == NULL) {
-        perror("Erro ao abrir o arquivo registro.txt");
-        return 0;
-    }
-
-    int i = 0;
-    char c;
-
-    while ((c = fgetc(file)) != EOF) {
-        if (c == '\n') {
-            i++;
-        }
-    }
-
-    fclose(file);
-    return i;
-}
-
 void salvarRegistro(char* cpf, char* registro) {
     char arq[50];
     sprintf(arq, "registros/%s.txt", cpf);
@@ -146,65 +205,6 @@ void resgatarRegistros(char* cpf) {
     }
 
     fclose(file);
-}
-
-int checkIsNumber(char* str){
-    for (int i = 0; i < strlen(str); i++) {
-        if (str[i] < '0' || str[i] > '9') {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-int checkCpfExist(char* cpf){
-    char cpfCheck[20];
-    FILE *file = fopen("cpfs.txt", "r");
-    
-    if (file == NULL) {
-        perror("Erro ao abrir o arquivo cpfs.txt");
-        return 0;
-    }
-
-    int i = 0;
-    while (1) {
-        if (feof(file)) {
-            break;
-        }
-
-        fscanf(file, "%[^\n]", cpfCheck);
-        fgetc(file);
-
-        if (strcmp(cpf, cpfCheck) == 0) {
-            fclose(file);
-            return 1;
-        }
-        i++;
-    }
-    fclose(file);
-    return 0;
-}
-
-int totalCpf() {
-    FILE *file = fopen("cpfs.txt", "r");
-    
-    if (file == NULL) {
-        perror("Erro ao abrir o arquivo cpfs.txt");
-        return 0;
-    }
-
-    int i = 0;
-    char c;
-
-    // Loop para contar o número de linhas no arquivo
-    while ((c = fgetc(file)) != EOF) {
-        if (c == '\n') {
-            i++;
-        }
-    }
-
-    fclose(file);
-    return i;
 }
 
 void registrarInvestidor(){
@@ -348,7 +348,7 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha, float* saldo, float
     } else {
         fclose(file);
 
-        char opcao[100];
+        char opcao[20];
         
         printf("CPF ou senha incorreto!\n\n");
         printf("Deseja tentar novamente? (s para sim | enter para nao): ");
@@ -406,7 +406,7 @@ void depositar(float* saldo, char* cpf) {
 
 void sacar(float* saldo, char* senha, char* cpf) {
     float valor;
-    char senhadigitada[100];
+    char senhadigitada[20];
     char registro[100];
 
     printf("\nInforme o valor para saque: R$ ");
@@ -444,7 +444,7 @@ void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* eth
     int opcao;
     float valorcompra;
     float taxa;
-    char senhadigitada[100];
+    char senhadigitada[20];
     char registro[100];
 
     exibirCotacao(bitcoinCotacao, ethereumCotacao, rippleCotacao);
