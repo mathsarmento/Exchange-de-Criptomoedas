@@ -210,8 +210,8 @@ void resgatarRegistros(char* cpf) {
 void registrarInvestidor(){
     char cpf[100];
     char nome[100];
-    char senha[100];
-    char opcao[100];
+    char senha[20];
+    char opcao[10];
 
     printf("Digite o nome do investidor: ");
     scanf("%[^\n]", nome);
@@ -225,33 +225,34 @@ void registrarInvestidor(){
     scanf("%[^\n]", senha);
     getchar();
 
+    if (totalCpf() >= 10) {
+        printf("Numero maximo de investidores atingido!\n\n");
+        return;
+    }
+
     if (strlen(nome) == 0 || strlen(cpf) == 0 || strlen(senha) == 0) {
         printf("Nome, CPF ou senha invalidos!\n\n");
-        Sleep(2000);
+        loading();
         registrarInvestidor();
         return;
     }
     if (strlen(cpf) != 11 || !checkIsNumber(cpf)) {
         printf("CPF invalido!\n\n");
-        Sleep(2000);
+        loading();
         registrarInvestidor();
         return;
     }
     if (strlen(senha) < 4) 
     {
         printf("Senha invalida!\n\n");
-        Sleep(2000);
+        loading();
         registrarInvestidor();
         return;
     }
     if (checkCpfExist(cpf)) {
         printf("CPF ja cadastrado!\n\n");
-        Sleep(2000);
+        loading();
         registrarInvestidor();
-        return;
-    }
-    if (totalCpf() >= 10) {
-        printf("Numero maximo de investidores atingido!\n\n");
         return;
     }
 
@@ -400,7 +401,7 @@ void depositar(float* saldo, char* cpf) {
         printf("Deposito realizado com sucesso!\n");
         printf("Seu novo saldo: R$ %.2f\n\n", *saldo);
     } else {
-        printf("Valor invalido para deposito!\n\n");
+        printf("\nValor invalido para deposito!\n\n");
     }
 }
 
@@ -435,9 +436,9 @@ void sacar(float* saldo, char* senha, char* cpf) {
 
 void exibirCotacao(float bitcoinCotacao, float ethereumCotacao, float rippleCotacao) {
     printf("Cotacao Atual:\n");
-    printf("1 Bitcoin: R$ %.2f\n", bitcoinCotacao);
-    printf("1 Ethereum: R$ %.2f\n", ethereumCotacao);
-    printf("1 Ripple: R$ %.2f\n\n", rippleCotacao);
+    printf("Bitcoin: R$ %.2f\n", bitcoinCotacao);
+    printf("Ethereum: R$ %.2f\n", ethereumCotacao);
+    printf("Ripple: R$ %.2f\n\n", rippleCotacao);
 }
 
 void comprarcriptomoedas(float* saldo, float* bitcoin, float* ripple, float* ethereum, char* senha, float bitcoinCotacao, float ethereumCotacao, float rippleCotacao, char* cpf) {
