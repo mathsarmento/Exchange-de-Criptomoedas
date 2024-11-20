@@ -360,7 +360,7 @@ int autenticarInvestidor(char* nome, char* cpf, char* senha, float* saldo, float
         if (strcmp(opcao, "s") == 0) {
             return autenticarInvestidor(nome, cpf, senha, saldo, bitcoin, ethereum, ripple);
         } 
-        return 0;
+        return -1;
     }
 
 }
@@ -712,33 +712,17 @@ int main() {
     float ripple = 0.0;
 
     printf("\n\nBem-vindo ao sistema de investimentos!\n\n");
-    while (1)
-    {
-        int opcao;
+    while (!autenticado) {
+        autenticado = autenticarInvestidor(nomeAuth, cpfAuth, senhaAuth, &saldo, &bitcoin, &ethereum, &ripple);
 
-        printf("Selecione a opcao desejada:\n\n");
-        printf("1. Registrar investidor\n");
-        printf("2. Logar investidor\n");
-        printf("3. Sair\n\n");
-        printf("Opcao: ");
-        scanf("%d", &opcao);
-        getchar();
-        printf("\n\n");
-
-        if (opcao == 1) {
-            registrarInvestidor();
-        } else if (opcao == 2) {
-            autenticado = autenticarInvestidor(nomeAuth, cpfAuth, senhaAuth, &saldo, &bitcoin, &ethereum, &ripple);
-
-            while (autenticado) {
-               autenticado = menuInvestidor(nomeAuth, cpfAuth, senhaAuth, &saldo, &bitcoin, &ethereum, &ripple);
-            }
-        } else if (opcao == 3) {
-            printf("Saindo...\n");
-            break;
-        } else {
-            printf("Opcao invalida! Tente novamente.\n");
+        if (autenticado == -1) {
+            return 0;
         }
+        
+    }
+
+    while (autenticado) {
+       autenticado = menuInvestidor(nomeAuth, cpfAuth, senhaAuth, &saldo, &bitcoin, &ethereum, &ripple);
     }
     
 }
