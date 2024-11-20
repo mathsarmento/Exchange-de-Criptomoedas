@@ -10,7 +10,8 @@ void loading() {
     }
     printf("\n\n");
 }
-
+int totalCriptos();
+int checkCriptoExist(char* sigla);
 int totalCpf();
 void criarSaldo(char* cpf);
 void criarRegistro(char* cpf);
@@ -263,8 +264,83 @@ void excluirInvestidor() {
 }
 
 void cadastrarCriptomoeda() {
-    printf("Funcao de cadastro de criptomoeda.\n");
-    // lógica de cadastro
+    char nome[100];
+    char sigla[10];
+    float cotacao;
+    float txCompra;
+    float txVenda;
+
+    printf("Digite o nome da criptomoeda: ");
+    scanf("%[^\n]", nome);
+    getchar();
+
+    printf("Digite a sigla da criptomoeda: ");
+    scanf("%[^\n]", sigla);
+    getchar();
+
+    printf("Digite a cotacao atual da criptomoeda: ");
+    scanf("%f", &cotacao);
+    getchar();
+
+    printf("Digite a taxa de compra da criptomoeda (1.0 = 100%%): ");
+    scanf("%f", &txCompra);
+    getchar();
+
+    printf("Digite a taxa de venda da criptomoeda (1.0 = 100%%): ");
+    scanf("%f", &txVenda);
+    getchar();
+
+    if(totalCriptos() >= 10) {
+        printf("Numero maximo de criptomoedas atingido!\n\n");
+        return;
+    }
+
+    if (checkCriptoExist(sigla)) {
+        printf("Sigla ja cadastrada!\n\n");
+        loading();
+        cadastrarCriptomoeda();
+        return;
+    }
+
+    if (strlen(nome) == 0 || strlen(sigla) == 0) {
+        printf("Nome ou sigla invalidos!\n\n");
+        loading();
+        cadastrarCriptomoeda();
+        return;
+    }
+
+    if (cotacao <= 0 || txCompra <= 0 || txVenda <= 0 || txCompra > 1 || txVenda > 1) {
+        printf("Cotacao ou taxa invalida!\n\n");
+        loading();
+        cadastrarCriptomoeda();
+        return;
+    }
+
+    FILE *file = fopen("criptos.txt", "a");
+
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo criptos.txt");
+        return;
+    }
+
+    fprintf(file, "%s\n", sigla);
+    fclose(file);
+
+    char arq[50];
+    sprintf(arq, "cotacoes/%s.txt", sigla);
+    file = fopen(arq, "w");
+
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo cotacoes.txt");
+        return;
+    }
+
+    fprintf(file, "%s\n%f\n%f\n%f\n", nome, cotacao, txCompra, txVenda);
+    fclose(file);
+
+    printf("Criptomoeda cadastrada com sucesso!\n\n");
+    loading();
+    return;
 }
 
 void excluirCriptomoeda() {
@@ -368,6 +444,56 @@ int checkCpfExist(char* cpf) {
         fgetc(file);
 
         if (strcmp(cpf, cpfCheck) == 0) {
+            fclose(file);
+            return 1;
+        }
+        i++;
+    }
+    fclose(file);
+    return 0;
+}
+
+int totalCriptos() {
+    FILE *file = fopen("criptos.txt", "r");
+    
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo criptos.txt");
+        return 0;
+    }
+
+    int i = 0;
+    char c;
+
+    // Loop para contar o número de linhas no arquivo
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') {
+            i++;
+        }
+    }
+
+    fclose(file);
+    return i;
+}
+
+int checkCriptoExist(char* sigla) {
+    char siglaCheck[10];
+    FILE *file = fopen("criptos.txt", "r");
+    
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo criptos.txt");
+        return 0;
+    }
+
+    int i = 0;
+    while (1) {
+        if (feof(file)) {
+            break;
+        }
+
+        fscanf(file, "%[^\n]", siglaCheck);
+        fgetc(file);
+
+        if (strcmp(sigla, siglaCheck) == 0) {
             fclose(file);
             return 1;
         }
