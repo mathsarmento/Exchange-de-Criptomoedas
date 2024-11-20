@@ -96,6 +96,43 @@ Você pode visualizar o histórico de todas as suas transações (compra, venda,
 Ao concluir suas operações, escolha a opção "Sair" para encerrar a sessão.
 
 ---
+## Programa do Administrador
+
+Este é um programa desenvolvido em C para o gerenciamento de investidores e criptomoedas. O programa fornece uma interface administrativa com várias funcionalidades, acessível somente após login.
+
+### Funcionalidades
+
+### 1. Efetuar Login
+   - O administrador deve informar o CPF e a senha. O menu principal só é exibido se as informações de login forem corretas.
+
+### 2. Cadastro de Novo Investidor
+   - Permite o cadastro de um novo investidor. O administrador deve fornecer o nome, **CPF, e **senha do investidor.
+
+### 3. Excluir Investidor
+   - O administrador deve informar o CPF do investidor a ser excluído. O programa exibe os dados do investidor associado ao CPF fornecido e solicita confirmação antes de realizar a exclusão.
+
+### 4. Cadastro de Criptomoeda
+   - Permite cadastrar uma nova criptomoeda no sistema. O administrador deve informar o nome da criptomoeda, a cotação inicial, **taxa de compra, e **taxa de venda.
+
+### 5. Excluir Criptomoeda
+   - Para excluir uma criptomoeda, o administrador deve informar o nome da criptomoeda. O programa exibe os dados da criptomoeda e solicita confirmação antes de realizar a exclusão.
+
+### 6. Consultar Saldo de um Investidor
+   - Permite consultar o saldo de um investidor. O administrador deve informar o CPF do investidor, e o saldo será exibido na tela.
+
+### 7. Consultar Extrato de um Investidor
+   - Exibe o extrato de transações de um investidor. O administrador deve informar o CPF do investidor para visualizar o extrato.
+
+### 8. Atualizar Cotação de Criptomoedas
+   - Atualiza as cotações das criptomoedas utilizando a mesma função de atualização do programa do investidor.
+
+## Instruções de Uso
+1. Compile o programa usando um compilador C.
+2. Execute o programa e faça o login como administrador com o CPF e a senha corretos para acessar o menu principal.
+
+## Observações
+O programa inclui funções de confirmação antes de exclusões para evitar exclusão acidental de dados. Todas as operações são realizadas após verificação e confirmação das informações fornecidas.
+
 
 ### Exemplo de Uso:
 
