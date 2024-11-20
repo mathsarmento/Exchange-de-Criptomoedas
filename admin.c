@@ -10,7 +10,11 @@ void loading() {
     }
     printf("\n\n");
 }
-
+int totalCpf();
+void criarSaldo(char* cpf);
+void criarRegistro(char* cpf);
+int checkIsNumber(char* str);
+int checkCpfExist(char* cpf);
 void efetuarLogin();
 void cadastrarInvestidor();
 void excluirInvestidor();
@@ -273,7 +277,7 @@ void criarRegistro(char* cpf) {
     fclose(file);
 }
 
-int checkIsNumber(char* str){
+int checkIsNumber(char* str) {
     for (int i = 0; i < strlen(str); i++) {
         if (str[i] < '0' || str[i] > '9') {
             return 0;
@@ -282,7 +286,7 @@ int checkIsNumber(char* str){
     return 1;
 }
 
-int checkCpfExist(char* cpf){
+int checkCpfExist(char* cpf) {
     char cpfCheck[20];
     FILE *file = fopen("cpfs.txt", "r");
     
