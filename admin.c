@@ -10,6 +10,7 @@ void loading() {
     }
     printf("\n\n");
 }
+
 int totalCpf();
 void criarSaldo(char* cpf);
 void criarRegistro(char* cpf);
@@ -195,8 +196,70 @@ void cadastrarInvestidor() {
 }
 
 void excluirInvestidor() {
-    printf("Funcao de exclusao de investidor.\n");
-    //  lógica de exclusão
+    char cpf[100];
+
+    printf("Digite o CPF do investidor que deseja excluir: ");
+    scanf("%[^\n]", cpf);
+    getchar();
+
+    loading();
+
+    if (!checkCpfExist(cpf)) {
+        printf("CPF nao cadastrado!\n\n");
+        return;
+    }
+
+    FILE *file = fopen("investidores.txt", "r");
+    FILE *fileTemp = fopen("temp.txt", "w");
+    
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo investidores.txt");
+        return;
+    }
+    if (fileTemp == NULL) {
+        perror("Erro ao abrir o arquivo temp.txt");
+        return;
+    }
+
+    char cpfCheck[100];
+    char nome[100];
+    char senha[20];
+
+    while (1) {
+        if (feof(file)) {
+            break;
+        }
+
+        fscanf(file, "%[^\n]", nome);
+        fgetc(file);
+        fscanf(file, "%[^\n]", cpfCheck);
+        fgetc(file);
+        fscanf(file, "%[^\n]", senha);
+        fgetc(file);
+
+        if (strcmp(cpf, cpfCheck) == 0) {
+            continue;
+        }
+
+        fprintf(fileTemp, "%s\n%s\n%s\n", nome, cpfCheck, senha);
+    }
+    fclose(file);
+    fclose(fileTemp);
+
+    remove("investidores.txt");
+    rename("temp.txt", "investidores.txt");
+    
+    char arq[50];
+
+    sprintf(arq, "registros/%s.txt", cpf);
+    remove(arq);
+    sprintf(arq, "saldo/%s.txt", cpf);
+    remove(arq);
+
+    printf("Investidor excluido com sucesso!\n\n");
+    
+    loading();
+    return;
 }
 
 void cadastrarCriptomoeda() {
