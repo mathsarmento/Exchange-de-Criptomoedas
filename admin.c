@@ -4,7 +4,7 @@
 
 void loading() {
     printf("\n");
-    for (int i = 0; i <= 10; i++) {
+    for (int i = 0; i <= 250; i++) {
         Sleep(12);
         printf(".");
     }
@@ -344,23 +344,72 @@ void cadastrarCriptomoeda() {
 }
 
 void excluirCriptomoeda() {
-    printf("Funcao de exclusao de criptomoeda.\n");
-    //  lógica de exclusão
+    char sigla[10];
+
+    printf("Digite a sigla da criptomoeda que deseja excluir: ");
+    scanf("%[^\n]", sigla);
+    getchar();
+
+    loading();
+
+    if (!checkCriptoExist(sigla)) {
+        printf("Sigla nao cadastrada!\n\n");
+        return;
+    }
+
+    FILE *file = fopen("criptos.txt", "r");
+    FILE *fileTemp = fopen("temp.txt", "w");
+
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo criptos.txt");
+        return;
+    }
+    if (fileTemp == NULL) {
+        perror("Erro ao abrir o arquivo temp.txt");
+        return;
+    }
+
+    char siglaCheck[10];
+
+    while (1) {
+        if (feof(file)) {
+            break;
+        }
+
+        fscanf(file, "%[^\n]", siglaCheck);
+        fgetc(file);
+
+        if (strcmp(sigla, siglaCheck) == 0) {
+            continue;
+        }
+
+        fprintf(fileTemp, "%s\n", siglaCheck);
+    }
+    fclose(file);
+    fclose(fileTemp);
+
+    remove("criptos.txt");
+    rename("temp.txt", "criptos.txt");
+
+    char arq[50];
+    sprintf(arq, "cotacoes/%s.txt", sigla);
+    remove(arq);
+    
+    printf("Criptomoeda excluida com sucesso!\n\n");
+    loading();
+    return;
 }
 
 void consultarSaldo() {
     printf("Funcao de consulta de saldo.\n");
-    //lógica de consulta
 }
 
 void consultarExtrato() {
     printf("Funcao de consulta de extrato.\n");
-    // lógica de consulta
 }
 
 void atualizarCotacao() {
     printf("Funcao de atualizacao de cotacao de criptomoedas.\n");
-    //lógica de atualização
 }
 
 int totalCpf() {
